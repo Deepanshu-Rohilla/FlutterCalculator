@@ -29,10 +29,59 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String output= "0";
+  String _output = '0';  // Stores the result temporarily before printing it out...
+  double num1=0.00;
+  double num2=0.00;
+  String operand = "";
+  void buttonPressed(String buttonText){
+    if(buttonText=="CLEAR"){
+       _output = '0';
+       num1=0.00;
+       num2=0.00;
+       operand = "";
+    } else if(buttonText=='+' || buttonText=="x" || buttonText =="/" || buttonText=="-"){
+        num1  = double.parse(output);
+        operand = buttonText;
+        _output ="0";
+    } else if (buttonText=="."){
+      if(_output.contains(".")) {
+        print("Already contains a decimal");
+        return;
+      } else{
+        _output = _output + buttonText;
+      }
+    } else if(buttonText=="=") {
+      num2 = double.parse(output);
+      if (operand == "+") {
+        _output = (num1 + num2).toString();
+      }
+      if (operand == "-") {
+        _output = (num1 - num2).toString();
+      }
+      if (operand == "x") {
+        _output = (num1 * num2).toString();
+      }
+      if (operand == "/") {
+        _output = (num1 / num2).toString();
+      }
+      num1 = 0.0;
+      num2 = 0.0;
+      operand="";
+    } else{
+      _output = _output + buttonText;
+    }
+    print(_output);
+    setState(() {
+      output = double.parse(_output).toStringAsFixed(2);
+    });
+  }
+
   Widget buildButton(String buttonText){
     return new Expanded(
       child: new OutlineButton(
-        onPressed: () => {},
+        onPressed: () =>
+          buttonPressed(buttonText)
+        ,
         child: new Text(buttonText,
         style: TextStyle(
           fontSize: 20.0,
@@ -84,10 +133,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     buildButton('.'),
                     buildButton('0'),
                     buildButton('00'),
-                    buildButton('*')
+                    buildButton('+')
                   ]),new Row(children: [
                     buildButton('CLEAR'),
-                    buildButton('+')
+                    buildButton('=')
                   ]),
                 ],
               )
